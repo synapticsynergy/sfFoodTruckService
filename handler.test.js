@@ -31,4 +31,25 @@ describe('handler.js',()=>{
       }).then(done,done);
     });
   });
+
+  describe('getSFFoodTrucks()',()=>{
+    it('should be a function',()=>{
+      expect(getSFFoodTrucks).to.be.a('function');
+    });
+    it('should accept an event as an argument',(done)=>{
+      //testing this way because this function is an async/await function.
+      getSFFoodTrucks().catch((err)=>{
+        expect(err.message).to.equal('Function getSFFoodTrucks expects an event as an argument');
+      })
+      .then(done,done);
+    });
+    it('return a promise',()=>{
+      expect(getSFFoodTrucks({})).to.be.a('promise');
+    });
+    it('should resolve a resp object with an array of message data in the body',(done)=>{
+      getSFFoodTrucks({}).then((resp)=>{
+        expect(JSON.parse(resp.body).message).to.be.an('array');
+      }).then(done,done);
+    });
+  })
 });

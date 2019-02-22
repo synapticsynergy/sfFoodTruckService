@@ -31,11 +31,16 @@ function fetchFoodTrucks(event) {
 }
 
 async function getSFFoodTrucks(event, context) {
+  if (typeof event !== 'object' || Array.isArray(event)) {
+    const err = new Error('Function getSFFoodTrucks expects an event as an argument');
+    console.error(err);
+    throw err;
+  }
   try {
     return await fetchFoodTrucks(event);
-    } catch(err) {
-      console.error(err);
-    };
+  } catch (err) {
+    console.error(err);
+  };
 }
 
 module.exports = {

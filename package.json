@@ -4,7 +4,7 @@
   "description": "Receive a filtered list of approved food trucks from San Francisco",
   "main": "handler.js",
   "scripts": {
-    "test": " yarn test"
+    "test": "./node_modules/.bin/mocha **.test.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,9 @@
   "homepage": "https://github.com/synapticsynergy/sfFoodTruckService#readme",
   "dependencies": {
     "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.1"
   }
 }

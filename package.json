@@ -1,0 +1,22 @@
+{
+  "name": "sffoodtruckservice",
+  "version": "1.0.0",
+  "description": "Receive a filtered list of approved food trucks from San Francisco",
+  "main": "handler.js",
+  "scripts": {
+    "test": " yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/synapticsynergy/sfFoodTruckService.git"
+  },
+  "author": "Blake Danson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/synapticsynergy/sfFoodTruckService/issues"
+  },
+  "homepage": "https://github.com/synapticsynergy/sfFoodTruckService#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}

@@ -52,3 +52,8 @@ yarn test
 - Include a deeplink to Yelp for more information. 
 - Include a deeplink to maps.
 - Include a deeplink to call an uber to your current location. 
+
+### Notes on Data Filtering:
+
+ - This service will only return food trucks that have currently approved permits.
+ 

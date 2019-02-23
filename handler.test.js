@@ -3,13 +3,14 @@ const handler = require('./handler');
 const getSFFoodTrucks = handler.getSFFoodTrucks;
 const fetchFoodTrucks = handler.fetchFoodTrucks;
 const filterByLocation = handler.filterByLocation;
+const getDistance = handler.getDistance;
 
 describe('handler.js',()=>{
   it('should exist',()=>{
     expect(handler).to.be.an('object');
   });
   it('should have three functions',()=>{
-    expect(handler).to.have.keys(['getSFFoodTrucks', 'fetchFoodTrucks', 'filterByLocation']);
+    expect(handler).to.have.keys(['getSFFoodTrucks', 'fetchFoodTrucks', 'filterByLocation', 'getDistance']);
   });
 
   describe('getSFFoodTrucks()',()=>{
@@ -99,6 +100,17 @@ describe('handler.js',()=>{
       applicant, fooditems, dayshours, lat, lng, address, distance',()=>{
       expect(filterByLocation({},[mockTruck])[0])
       .to.have.keys(['applicant', 'fooditems', 'dayshours', 'lat', 'lng', 'address', 'distance']);
+    });
+  });
+
+  describe('getDistance()',()=>{
+    it('should be a function',()=>{
+      expect(getDistance).to.be.a('function');
+    });
+    it('should accept two objects as arguments',()=>{
+      expect(()=>{
+        getDistance();
+      }).to.throw('Function expects two objects as arguments');
     });
   });
 });

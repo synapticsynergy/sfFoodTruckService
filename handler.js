@@ -93,4 +93,5 @@ module.exports = {
   getSFFoodTrucks,
   fetchFoodTrucks,
   filterByLocation,
+  getDistance,
 }

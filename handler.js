@@ -1,5 +1,6 @@
 "use-strict";
 const axios = require('axios');
+const geolib = require('geolib');
 
 async function getSFFoodTrucks(event, context) {
   if (typeof event !== 'object' || Array.isArray(event)) {
@@ -23,7 +24,7 @@ function fetchFoodTrucks(event) {
   return new Promise((resolve,reject)=>{
     axios.get('https://data.sfgov.org/resource/6a9r-agq8.json?status=APPROVED')
     .then((data)=>{
-      let location = {lat: "37.7901855706334", lng: "-122.395471725809"}
+      let location = {latitude: '37.7901855706334', longitude: '-122.395471725809'}
       let truckList = data.data;
       filterByLocation(location, truckList);
       const resp = {
@@ -66,27 +67,41 @@ function filterByLocation(location, truckList){
     if (truck.latitude !== '0' && truck.longitude !== '0') {
       //getdistance from two locations lat lng
       let truckLocation = {
-        lat: truck.latitude, 
-        lng: truck.longitude
+        latitude: truck.latitude, 
+        longitude: truck.longitude
       };
       let distance = getDistance(location, truckLocation);
-      return {
-        applicant: truck.applicant,
-        fooditems: truck.fooditems,
-        dayshours: truck.dayshours,
-        lat: truck.latitude,
-        lng: truck.longitude, 
-        address: truck.address,
-        distance: distance,
+      if (distance <= 1) {
+        return {
+          applicant: truck.applicant,
+          fooditems: truck.fooditems,
+          dayshours: truck.dayshours,
+          latitude: truck.latitude,
+          longitude: truck.longitude, 
+          address: truck.address,
+          distance: distance,
+        }
       }
     }
   });
-  console.log(result);
-  return result;
+  // console.log(result.filter(data=>data));
+  return result.filter(data => data);;
 }
 
-function getDistance() {
-  return 1;
+function getDistance(location1,location2) {
+  if (
+    typeof location1 !== 'object' || 
+    Array.isArray(location1) || 
+    typeof location2 !== 'object' || 
+    Array.isArray(location2)
+    ) {
+      const err = new Error('Function expects two objects as arguments');
+      console.error(err);
+      throw err;
+    }
+    // converts the distance to miles and rounds to the nearest hundredths place.
+    const distance = geolib.convertUnit('mi', geolib.getDistance(location1,location2), 2);
+  return distance;
 }
 
 module.exports = {

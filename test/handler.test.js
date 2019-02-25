@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
-const handler = require('./handler');
+const testData = require('./mockTrucksTestData');
+const handler = require('../handler');
 const getSFFoodTrucks = handler.getSFFoodTrucks;
 const fetchFoodTrucks = handler.fetchFoodTrucks;
 const filterByLocation = handler.filterByLocation;
@@ -54,34 +55,10 @@ describe('handler.js',()=>{
   });
 
   describe('filterByLocation()',()=>{
-    let mockTruck = {
-      "address": "1169 MARKET ST",
-      "applicant": "Golden Gate Halal Food",
-      "approved": "2018-12-19T00:00:00.000",
-      "block": "3702",
-      "blocklot": "3702051",
-      "cnn": "8751101",
-      "dayshours": "We/Fr/Sa:8AM-8PM",
-      "expirationdate": "2019-07-15T00:00:00.000",
-      "facilitytype": "Push Cart",
-      "fooditems": "Pulao Plates & Sandwiches: Various Drinks",
-      "latitude": "37.7901855706334",
-      "location": {
-        "type": "Point",
-        "coordinates": [
-          0,
-          0
-        ]
-      },
-      "locationdescription": "MARKET ST: 07TH ST \\ CHARLES J BRENHAM PL to 08TH ST \\ GROVE ST \\ HYDE ST (1101 - 1199) -- SOUTH --",
-      "longitude": "-122.395471725809",
-      "lot": "051",
-      "objectid": "1012444",
-      "permit": "16MFF-0094",
-      "priorpermit": "0",
-      "received": "2016-04-18",
-      "schedule": "http://bsm.sfdpw.org/PermitsTracker/reports/report.aspx?title=schedule&report=rptSchedule&params=permit=16MFF-0094&ExportPDF=1&Filename=16MFF-0094_schedule.pdf",
-      "status": "APPROVED"
+    const mockTrucks = testData.mockTrucks;
+    const mockLoc1 = {
+      lat: '37.7901855706334',
+      lng: '-122.395471725809',
     }
     it('should be a function',()=>{
       expect(filterByLocation).to.be.a('function');
@@ -97,13 +74,27 @@ describe('handler.js',()=>{
       }).to.throw('Function filterByLocation expects an array as its second argument');
     });
     it('should return an array of objects with the following keys: \
-      applicant, fooditems, dayshours, lat, lng, address, distance',()=>{
-      expect(filterByLocation({},[mockTruck])[0])
-      .to.have.keys(['applicant', 'fooditems', 'dayshours', 'lat', 'lng', 'address', 'distance']);
+      applicant, fooditems, dayshours, latitude, longitude, address, distance',()=>{
+      expect(filterByLocation(mockLoc1,mockTrucks)[0])
+      .to.have.keys(['applicant', 'fooditems', 'dayshours', 'latitude', 'longitude', 'address', 'distance']);
+    });
+    it('should filter out locations that are greater than a mile away',()=>{
+      expect(filterByLocation(mockLoc1,mockTrucks)).to.have.lengthOf(1);
+    });
+    it('should return an array sorted by distance',()=>{
+      expect(filterByLocation(mockLoc1,mockTrucks)[0].distance).to.equal(0.1);
     });
   });
 
   describe('getDistance()',()=>{
+    const mockLoc1 = {
+      lat: '37.7901855706334',
+      lng: '-122.395471725809',
+    }
+    const mockLoc2 = {
+      lat: '37.7587861623056',
+      lng: '-122.390958398693',
+    }
     it('should be a function',()=>{
       expect(getDistance).to.be.a('function');
     });
@@ -111,6 +102,15 @@ describe('handler.js',()=>{
       expect(()=>{
         getDistance();
       }).to.throw('Function expects two objects as arguments');
+      expect(()=>{
+        getDistance({});
+      }).to.throw('Function expects two objects as arguments');
+    });
+    it('should return a number',()=>{
+      expect(getDistance(mockLoc1,mockLoc2)).to.be.a('number');
+    });
+    it('should return the distance in miles between two location objects with lat and lng keys',()=>{
+      expect(getDistance(mockLoc1,mockLoc2)).to.equal(2.18);
     });
   });
 });

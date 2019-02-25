@@ -26,7 +26,6 @@ function fetchFoodTrucks(event) {
     .then((data)=>{
       let location = {latitude: '37.7901855706334', longitude: '-122.395471725809'}
       let truckList = data.data;
-      filterByLocation(location, truckList);
       const resp = {
         statusCode: 200,
         headers: {
@@ -34,7 +33,7 @@ function fetchFoodTrucks(event) {
           'Access-Control-Allow-Credentials': true,
         },
         body: JSON.stringify({
-          message: truckList,
+          message: filterByLocation(location, truckList),
           input: event,
         })
       }
@@ -60,17 +59,17 @@ function filterByLocation(location, truckList){
   }
   // //deep clone truckList to avoid mutation
   let truckListCopy = JSON.parse(JSON.stringify(truckList));
-  let result = truckListCopy.map((truck, index)=>{
+  let mappedTruckList = truckListCopy.map((truck, index)=>{
     if(index === 0) {
       // console.log(truck,' what is truck data here?');
     }
     if (truck.latitude !== '0' && truck.longitude !== '0') {
       //getdistance from two locations lat lng
-      let truckLocation = {
+      const truckLocation = {
         latitude: truck.latitude, 
         longitude: truck.longitude
       };
-      let distance = getDistance(location, truckLocation);
+      const distance = getDistance(location, truckLocation);
       if (distance <= 1) {
         return {
           applicant: truck.applicant,
@@ -84,8 +83,12 @@ function filterByLocation(location, truckList){
       }
     }
   });
-  // console.log(result.filter(data=>data));
-  return result.filter(data => data);;
+  const finalTruckList = mappedTruckList
+  .filter(data => data)
+  .sort((a,b)=>{
+    return a.distance - b.distance;
+  }).slice(0,50);
+  return finalTruckList;
 }
 
 function getDistance(location1,location2) {

@@ -1,34 +1,5 @@
-const mockTrucks = 
-[
-  {
-    "address": "1169 MARKET ST",
-    "applicant": "Golden Gate Halal Food",
-    "approved": "2018-12-19T00:00:00.000",
-    "block": "3702",
-    "blocklot": "3702051",
-    "cnn": "8751101",
-    "dayshours": "We/Fr/Sa:8AM-8PM",
-    "expirationdate": "2019-07-15T00:00:00.000",
-    "facilitytype": "Push Cart",
-    "fooditems": "Pulao Plates & Sandwiches: Various Drinks",
-    "latitude": "37.7901855706334",
-    "location": {
-      "type": "Point",
-      "coordinates": [
-        37.7901855706334,
-        -122.395471725809
-      ]
-    },
-    "locationdescription": "MARKET ST: 07TH ST \\ CHARLES J BRENHAM PL to 08TH ST \\ GROVE ST \\ HYDE ST (1101 - 1199) -- SOUTH --",
-    "longitude": "-122.395471725809",
-    "lot": "051",
-    "objectid": "1012444",
-    "permit": "16MFF-0094",
-    "priorpermit": "0",
-    "received": "2016-04-18",
-    "schedule": "http://bsm.sfdpw.org/PermitsTracker/reports/report.aspx?title=schedule&report=rptSchedule&params=permit=16MFF-0094&ExportPDF=1&Filename=16MFF-0094_schedule.pdf",
-    "status": "APPROVED"
-  },
+const mockTrucks =
+  [
     {
       "address": "951 INDIANA ST",
       "applicant": "Anas Goodies Catering",
@@ -90,8 +61,71 @@ const mockTrucks =
       "status": "APPROVED",
       "x": "6017060.368",
       "y": "2092340.381"
+    },
+    {
+      address: '100 GEARY ST',
+      applicant:
+        'San Francisco Carts & Concessions, Inc. DBA Stanley\'s Steamers Hot Dogs',
+      approved: '2018-07-17T00:00:00.000',
+      block: '0309',
+      blocklot: '0309003',
+      cnn: '6108000',
+      dayshours: 'Mo-Su:6AM-12AM',
+      expirationdate: '2019-07-15T00:00:00.000',
+      facilitytype: 'Push Cart',
+      fooditems:
+        'Hot dogs: condiments: soft pretzels: soft drinks: coffee: cold beverages: pastries: bakery goods: cookies: ice cream: candy: soups: churros: chestnuts: nuts: fresh fruit: fruit juices: desserts: potato chips and popcorn.',
+      latitude: '37.7879142297241',
+      location:
+      {
+        type: 'Point',
+        coordinates: [-122.405270523095, 37.787914229724]
+      },
+      locationdescription: 'GEARY ST: GRANT AVE to STOCKTON ST (100 - 199)',
+      longitude: '-122.405270523095',
+      lot: '003',
+      objectid: '1189956',
+      permit: '18MFF-0078',
+      priorpermit: '1',
+      received: '2018-07-16',
+      schedule:
+        'http://bsm.sfdpw.org/PermitsTracker/reports/report.aspx?title=schedule&report=rptSchedule&params=permit=18MFF-0078&ExportPDF=1&Filename=18MFF-0078_schedule.pdf',
+      status: 'APPROVED',
+      x: '6011136.441',
+      y: '2114963.525'
+    },
+    {
+      address: '602 MISSION ST',
+      applicant: 'JapaCurry',
+      approved: '2018-07-16T00:00:00.000',
+      block: '3707',
+      blocklot: '3707013',
+      cnn: '9092000',
+      dayshours: 'We/Th:10AM-2PM',
+      expirationdate: '2019-07-15T00:00:00.000',
+      facilitytype: 'Truck',
+      fooditems:
+        'Katsu Curry: KUROBUTA Sausage Curry: Vegetable Curry: Veggie Croquette Curry: Chicken NANBAN Bento: Nori Bento: water: soda: green tea',
+      latitude: '37.787973283216',
+      location:
+      {
+        type: 'Point',
+        coordinates: [-122.400185049889, 37.787973283216]
+      },
+      locationdescription: 'MISSION ST: 02ND ST to NEW MONTGOMERY ST (600 - 634)',
+      longitude: '-122.400185049889',
+      lot: '013',
+      objectid: '1189931',
+      permit: '18MFF-0076',
+      priorpermit: '1',
+      received: '2018-07-16',
+      schedule:
+        'http://bsm.sfdpw.org/PermitsTracker/reports/report.aspx?title=schedule&report=rptSchedule&params=permit=18MFF-0076&ExportPDF=1&Filename=18MFF-0076_schedule.pdf',
+      status: 'APPROVED',
+      x: '6012606.129',
+      y: '2114955.147'
     }
-];
+  ];
 
 module.exports = {
   mockTrucks,

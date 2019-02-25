@@ -59,12 +59,9 @@ function filterByLocation(location, truckList){
   }
   // //deep clone truckList to avoid mutation
   let truckListCopy = JSON.parse(JSON.stringify(truckList));
-  let mappedTruckList = truckListCopy.map((truck, index)=>{
-    if(index === 0) {
-      // console.log(truck,' what is truck data here?');
-    }
+  let finalTruckList = truckListCopy.map((truck, index)=>{
     if (truck.latitude !== '0' && truck.longitude !== '0') {
-      //getdistance from two locations lat lng
+      //getdistance from two locations latitude longitude
       const truckLocation = {
         latitude: truck.latitude, 
         longitude: truck.longitude
@@ -82,12 +79,12 @@ function filterByLocation(location, truckList){
         }
       }
     }
-  });
-  const finalTruckList = mappedTruckList
+  })
   .filter(data => data)
   .sort((a,b)=>{
     return a.distance - b.distance;
   }).slice(0,50);
+
   return finalTruckList;
 }
 

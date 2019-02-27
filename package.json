@@ -4,7 +4,7 @@
   "description": "Receive a filtered list of approved food trucks from San Francisco",
   "main": "handler.js",
   "scripts": {
-    "test": "mocha test/**.test.js"
+    "test": "nyc mocha test/**.test.js"
   },
   "repository": {
     "type": "git",

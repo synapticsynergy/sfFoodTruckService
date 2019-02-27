@@ -3,6 +3,7 @@ const testData = require('./mockTrucksTestData');
 const handler = require('../handler');
 const getSFFoodTrucks = handler.getSFFoodTrucks;
 const respondWithFoodTrucks = handler.respondWithFoodTrucks;
+const getLatLong = handler.getLatLong;
 const filterByLocation = handler.filterByLocation;
 const getDistance = handler.getDistance;
 const notifyUserOfError = handler.notifyUserOfError;
@@ -16,7 +17,9 @@ describe('handler.js',()=>{
       [
         'getSFFoodTrucks',
         'respondWithFoodTrucks',
-        // fetchFoodTrucks,
+        'getLatLong',
+        'buildUserResponse',
+        'fetchFoodTrucks',
         'filterByLocation',
         'getDistance',
         'notifyUserOfError'
@@ -106,6 +109,12 @@ describe('handler.js',()=>{
         expect(err.message).to.equal('Location Not Found')
       }).then(done,done)
     }).timeout(3000);
+  });
+
+  describe('getLatLong()',()=>{
+    it('should be a function',()=>{
+      expect(getLatLong).to.be.a('function');
+    });
   });
 
   describe('filterByLocation()',()=>{

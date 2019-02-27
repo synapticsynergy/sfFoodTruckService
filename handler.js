@@ -47,6 +47,11 @@ function respondWithFoodTrucks(event) {
 }
 
 function getLatLong(eventBody) {
+  if (typeof eventBody !== 'object' || Array.isArray(eventBody)) {
+    const err = new Error('Function getLatLong expects an event as an argument')
+    console.error(err)
+    throw err
+  }
   return new Promise((resolve, reject) => {
     const location = eventBody.location
     let latitude
@@ -127,7 +132,7 @@ function filterByLocation(location, truckList) {
       const truckLocation = {
         latitude: truck.latitude,
         longitude: truck.longitude
-      };
+      }
       const distance = getDistance(location, truckLocation)
       if (distance <= 1) {
         return {
@@ -184,7 +189,9 @@ function notifyUserOfError(err, event) {
 module.exports = {
   getSFFoodTrucks,
   respondWithFoodTrucks,
-  // fetchFoodTrucks,
+  getLatLong,
+  buildUserResponse,
+  fetchFoodTrucks,
   filterByLocation,
   getDistance,
   notifyUserOfError

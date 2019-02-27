@@ -18,6 +18,7 @@ Lambda function to get food truck data from a San Francisco database.
 ## Requirements
 
 - Node 8.10
+- serverless 1.38.0 or higher: [serverless docs](#https://serverless.com)
 
 ## Development
 
@@ -25,14 +26,14 @@ Lambda function to get food truck data from a San Francisco database.
 
 From within the root directory:
 
-```sh
+```
 yarn
 ```
 
-## Create a serverless.env.yml for API keys
+## Create a .config.dev.json for API keys
 
-```sh
-touch serverless.env.yml
+```
+touch .config.dev.json
 ```
 
 Then add something like the following:
@@ -53,16 +54,18 @@ Then add something like the following:
 
 From within the root directory:
 
-```sh
-yarn start
 ```
+sls deploy
+```
+
+For more information check the [serverless docs](#https://serverless.com)
 
 ## Testing
 
 From within the root directory:
 
 Server side testing:
-```sh
+```
 yarn test
 ```
 

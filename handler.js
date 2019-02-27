@@ -8,46 +8,49 @@ const options = {
   httpAdapter: 'https',
   apiKey: process.env.GOOGLE_MAPS_APIKEY || GOOGLE_MAPS_APIKEY,
   formatter: null
-};
+}
 const geocoder = NodeGeocoder(options)
 
-async function getSFFoodTrucks (event, context) {
+async function getSFFoodTrucks(event, context) {
   if (typeof event !== 'object' || Array.isArray(event)) {
     const err = new Error('Function getSFFoodTrucks expects an event as an argument')
     console.error(err)
     throw err
   }
   try {
-    return await fetchFoodTrucks(event)
+    return await respondWithFoodTrucks(event)
   } catch (err) {
     console.error(err)
-    const resp = {
-      statusCode: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true
-      },
-      body: JSON.stringify({
-        message: err,
-        input: event
-      })
-    }
-    return resp
+    return notifyUserOfError(err, event)
   }
 }
 
-function fetchFoodTrucks (event) {
+function respondWithFoodTrucks(event) {
   if (typeof event !== 'object' || Array.isArray(event)) {
-    const err = new Error('Function fetchFoodTrucks expects an event as an argument')
+    const err = new Error('Function respondWithFoodTrucks expects an event as an argument')
     console.error(err)
     throw err
   }
   return new Promise((resolve, reject) => {
     console.log(event.body)
     const eventBody = JSON.parse(event.body)
+
+    getLatLong(eventBody).then((latLong) => {
+      return fetchFoodTrucks(latLong.latitude, latLong.longitude, event)
+    }).then((resp) => {
+      resolve(resp)
+    }).catch((err) => {
+      console.error(err, ' Failed to respondWithFoodTrucks')
+      reject(err)
+    })
+  })
+}
+
+function getLatLong(eventBody) {
+  return new Promise((resolve, reject) => {
     const location = eventBody.location
-    let latitude = eventBody.latitude
-    let longitude = eventBody.longitude
+    let latitude
+    let longitude
 
     if (location !== 'Current Location') {
       geocoder.geocode({ address: location })
@@ -55,28 +58,29 @@ function fetchFoodTrucks (event) {
           latitude = data[0].latitude
           longitude = data[0].longitude
           console.log(data, ' Geocode Data Success')
+          resolve({
+            latitude: latitude,
+            longitude: longitude
+          })
         })
         .catch(err => {
-          console.error(err, ' Location Not Found')
+          console.error(err, ' Failed to getLatLong')
           reject(new Error('Location Not Found'))
         })
+    } else {
+      resolve({
+        latitude: eventBody.latitude,
+        longitude: eventBody.longitude
+      })
     }
+  })
+}
 
+function fetchFoodTrucks(latitude, longitude, event) {
+  return new Promise((resolve, reject) => {
     axios.get('https://data.sfgov.org/resource/6a9r-agq8.json?status=APPROVED')
       .then((data) => {
-        let location = { latitude: String(latitude), longitude: String(longitude) }
-        let truckList = data.data
-        const resp = {
-          statusCode: 200,
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Credentials': true
-          },
-          body: JSON.stringify({
-            message: filterByLocation(location, truckList),
-            input: event
-          })
-        }
+        const resp = buildUserResponse(data, latitude, longitude, event)
         console.log('Fetch was successful')
         resolve(resp)
       }).catch((err) => {
@@ -86,7 +90,25 @@ function fetchFoodTrucks (event) {
   })
 }
 
-function filterByLocation (location, truckList) {
+function buildUserResponse(data, latitude, longitude, event) {
+  let location = { latitude: String(latitude), longitude: String(longitude) }
+  let truckList = data.data
+  let message = filterByLocation(location, truckList)
+  const resp = {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
+    },
+    body: JSON.stringify({
+      message: message,
+      input: event
+    })
+  }
+  return resp
+}
+
+function filterByLocation(location, truckList) {
   if (typeof location !== 'object' || Array.isArray(location)) {
     const err = new Error('Function filterByLocation expects an object as its first argument')
     console.error(err)
@@ -128,7 +150,7 @@ function filterByLocation (location, truckList) {
   return finalTruckList
 }
 
-function getDistance (location1, location2) {
+function getDistance(location1, location2) {
   if (
     typeof location1 !== 'object' ||
     Array.isArray(location1) ||
@@ -144,9 +166,26 @@ function getDistance (location1, location2) {
   return distance
 }
 
+function notifyUserOfError(err, event) {
+  const resp = {
+    statusCode: 500,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
+    },
+    body: JSON.stringify({
+      message: err,
+      input: event
+    })
+  }
+  return resp
+}
+
 module.exports = {
   getSFFoodTrucks,
-  fetchFoodTrucks,
+  respondWithFoodTrucks,
+  // fetchFoodTrucks,
   filterByLocation,
-  getDistance
+  getDistance,
+  notifyUserOfError
 }

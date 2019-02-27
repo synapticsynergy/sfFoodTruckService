@@ -2,16 +2,26 @@ const expect = require('chai').expect;
 const testData = require('./mockTrucksTestData');
 const handler = require('../handler');
 const getSFFoodTrucks = handler.getSFFoodTrucks;
-const fetchFoodTrucks = handler.fetchFoodTrucks;
+const respondWithFoodTrucks = handler.respondWithFoodTrucks;
 const filterByLocation = handler.filterByLocation;
 const getDistance = handler.getDistance;
+const notifyUserOfError = handler.notifyUserOfError;
 
 describe('handler.js',()=>{
   it('should exist',()=>{
     expect(handler).to.be.an('object');
   });
-  it('should have three functions',()=>{
-    expect(handler).to.have.keys(['getSFFoodTrucks', 'fetchFoodTrucks', 'filterByLocation', 'getDistance']);
+  it('should have six functions', () => {
+    expect(handler).to.have.keys(
+      [
+        'getSFFoodTrucks',
+        'respondWithFoodTrucks',
+        // fetchFoodTrucks,
+        'filterByLocation',
+        'getDistance',
+        'notifyUserOfError'
+      ]
+    );
   });
 
   describe('getSFFoodTrucks()',()=>{
@@ -47,7 +57,7 @@ describe('handler.js',()=>{
     }).timeout(3000);
   })
 
-  describe('fetchFoodTrucks()',()=>{
+  describe('respondWithFoodTrucks()',()=>{
     const mockLoc1 = {
       body: JSON.stringify({
         latitude: '37.7901855706334',
@@ -56,18 +66,18 @@ describe('handler.js',()=>{
       })
     }
     it('should be a function',()=>{
-      expect(fetchFoodTrucks).to.be.a('function');
+      expect(respondWithFoodTrucks).to.be.a('function');
     });
     it('should accept an event as an argument',()=>{
       expect(()=>{
-          fetchFoodTrucks()
-        }).to.throw('Function fetchFoodTrucks expects an event as an argument');
+          respondWithFoodTrucks()
+        }).to.throw('Function respondWithFoodTrucks expects an event as an argument');
     });
     it('should return a promise',()=>{
-      expect(fetchFoodTrucks(mockLoc1)).to.be.a('promise');
+      expect(respondWithFoodTrucks(mockLoc1)).to.be.a('promise');
     });
     it('should resolve a resp object with an array of message data in the body',(done)=>{
-      fetchFoodTrucks(mockLoc1).then((resp)=>{
+      respondWithFoodTrucks(mockLoc1).then((resp)=>{
         expect(JSON.parse(resp.body).message).to.be.an('array');
       }).then(done,done)
     }).timeout(3000);
@@ -79,7 +89,7 @@ describe('handler.js',()=>{
           location: '278 Post St, San Francisco, CA 94108',
         })
       }
-      fetchFoodTrucks(mockLoc1).then((resp)=>{
+      respondWithFoodTrucks(mockLoc1).then((resp)=>{
         console.log(JSON.parse(resp.body).message);
         expect(JSON.parse(resp.body).message).to.be.an('array');
       }).then(done,done)
@@ -92,7 +102,7 @@ describe('handler.js',()=>{
           location: '',
         })
       }
-      fetchFoodTrucks(mockLoc1).catch((err)=>{
+      respondWithFoodTrucks(mockLoc1).catch((err)=>{
         expect(err.message).to.equal('Location Not Found')
       }).then(done,done)
     }).timeout(3000);

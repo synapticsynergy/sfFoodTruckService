@@ -4,7 +4,7 @@
   "description": "Receive a filtered list of approved food trucks from San Francisco",
   "main": "handler.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/**.test.js"
+    "test": "mocha test/**.test.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "mocha": "^6.0.1"
+    "mocha": "^6.0.1",
+    "nyc": "^13.3.0"
   }
 }

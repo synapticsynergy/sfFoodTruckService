@@ -1,6 +1,15 @@
 "use-strict";
 const axios = require('axios');
 const geolib = require('geolib');
+const NodeGeocoder = require('node-geocoder');
+const GOOGLE_MAPS_APIKEY = require('./.config.dev.json').dev.GOOGLE_MAPS_APIKEY;
+const options = {
+  provider: 'google',
+  httpAdapter: 'https', // Default
+  apiKey: process.env.GOOGLE_MAPS_APIKEY || GOOGLE_MAPS_APIKEY,
+  formatter: null, // 'gpx', 'string', ...
+};
+const geocoder = NodeGeocoder(options);
 
 async function getSFFoodTrucks(event, context) {
   if (typeof event !== 'object' || Array.isArray(event)) {
@@ -12,6 +21,18 @@ async function getSFFoodTrucks(event, context) {
     return await fetchFoodTrucks(event);
   } catch (err) {
     console.error(err);
+    const resp = {
+      statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
+      body: JSON.stringify({
+        message: err,
+        input: event,
+      })
+    }
+    return resp;
   };
 }
 
@@ -22,9 +43,28 @@ function fetchFoodTrucks(event) {
     throw err;
   }
   return new Promise((resolve,reject)=>{
+    console.log(event.body);
+    const eventBody = JSON.parse(event.body);
+    const location = eventBody.location;
+    let latitude = eventBody.latitude 
+    let longitude = eventBody.longitude;
+
+    if (location !== 'Current Location') {
+      geocoder.geocode({ address: location })
+      .then(data => {
+        latitude = data[0].latitude;
+        longitude = data[0].longitude;
+        console.log(data,' Geocode Data Success');
+      })
+      .catch(err => {
+        console.error(err, ' Location Not Found');
+        reject(new Error('Location Not Found'));
+      });
+    }
+
     axios.get('https://data.sfgov.org/resource/6a9r-agq8.json?status=APPROVED')
     .then((data)=>{
-      let location = {latitude: '37.7901855706334', longitude: '-122.395471725809'}
+      let location = {latitude: String(latitude), longitude: String(longitude)}
       let truckList = data.data;
       const resp = {
         statusCode: 200,

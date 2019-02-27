@@ -4,7 +4,8 @@ provider:
   runtime: nodejs8.10
   stage: dev
   region: us-west-2
-
+  environment: 
+    GOOGLE_MAPS_APIKEY: ${file(./.config.dev.json):dev.GOOGLE_MAPS_APIKEY}
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -36,7 +37,7 @@ functions:
     events:
     - http:
         path: /sfFoodTrucks
-        method: get
+        method: post
         cors: true
 
 #    The following are a few example events you can configure

@@ -29,6 +29,26 @@ From within the root directory:
 yarn
 ```
 
+## Create a serverless.env.yml for API keys
+
+```sh
+touch serverless.env.yml
+```
+
+Then add something like the following:
+
+```
+{
+  "dev": {
+    "GOOGLE_MAPS_APIKEY": "Replace this with your api key"
+  },
+  "prod" : {
+    "GOOGLE_MAPS_APIKEY": "Replace this with your api key"
+  }
+}
+
+```
+
 ## Serving in Development
 
 From within the root directory:

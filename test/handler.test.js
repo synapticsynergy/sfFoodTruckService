@@ -16,8 +16,11 @@ describe('handler.js',()=>{
 
   describe('getSFFoodTrucks()',()=>{
     const mockLoc1 = {
-      lat: '37.7901855706334',
-      lng: '-122.395471725809',
+      body: JSON.stringify({
+        latitude: '37.7901855706334',
+        longitude: '-122.395471725809',
+        location: 'Current Location',
+      })
     }
     it('should be a function',()=>{
       expect(getSFFoodTrucks).to.be.a('function');
@@ -46,8 +49,11 @@ describe('handler.js',()=>{
 
   describe('fetchFoodTrucks()',()=>{
     const mockLoc1 = {
-      lat: '37.7901855706334',
-      lng: '-122.395471725809',
+      body: JSON.stringify({
+        latitude: '37.7901855706334',
+        longitude: '-122.395471725809',
+        location: 'Current Location',
+      })
     }
     it('should be a function',()=>{
       expect(fetchFoodTrucks).to.be.a('function');
@@ -63,8 +69,31 @@ describe('handler.js',()=>{
     it('should resolve a resp object with an array of message data in the body',(done)=>{
       fetchFoodTrucks(mockLoc1).then((resp)=>{
         expect(JSON.parse(resp.body).message).to.be.an('array');
-      }).catch((err)=>{
-        console.log(err,' was there an error fetching??');
+      }).then(done,done)
+    }).timeout(3000);
+    it('should return results from an address when location is not Current Location',(done)=>{
+      const mockLoc1 = {
+        body: JSON.stringify({
+          latitude: '',
+          longitude: '',
+          location: '278 Post St, San Francisco, CA 94108',
+        })
+      }
+      fetchFoodTrucks(mockLoc1).then((resp)=>{
+        console.log(JSON.parse(resp.body).message);
+        expect(JSON.parse(resp.body).message).to.be.an('array');
+      }).then(done,done)
+    }).timeout(3000);
+    it('should return results from an address when location is not Current Location',(done)=>{
+      const mockLoc1 = {
+        body: JSON.stringify({
+          latitude: '',
+          longitude: '',
+          location: '',
+        })
+      }
+      fetchFoodTrucks(mockLoc1).catch((err)=>{
+        expect(err.message).to.equal('Location Not Found')
       }).then(done,done)
     }).timeout(3000);
   });
@@ -72,8 +101,8 @@ describe('handler.js',()=>{
   describe('filterByLocation()',()=>{
     const mockTrucks = testData.mockTrucks;
     const mockLoc1 = {
-      lat: '37.7901855706334',
-      lng: '-122.395471725809',
+      latitude: '37.7901855706334',
+      longitude: '-122.395471725809',
     }
     it('should be a function',()=>{
       expect(filterByLocation).to.be.a('function');
@@ -104,12 +133,12 @@ describe('handler.js',()=>{
 
   describe('getDistance()',()=>{
     const mockLoc1 = {
-      lat: '37.7901855706334',
-      lng: '-122.395471725809',
+      latitude: '37.7901855706334',
+      longitude: '-122.395471725809',
     }
     const mockLoc2 = {
-      lat: '37.7587861623056',
-      lng: '-122.390958398693',
+      latitude: '37.7587861623056',
+      longitude: '-122.390958398693',
     }
     it('should be a function',()=>{
       expect(getDistance).to.be.a('function');

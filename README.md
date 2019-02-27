@@ -69,14 +69,22 @@ Server side testing:
 yarn test
 ```
 
+### Style Guide
+
+For this project I'm using the popular [Standard JS Style Guide](https://standardjs.com). Eslint is installed to help keep styles consistent. 
+
+### Given More Time
+
+Given more time, I would impliment integration tests for the AWS Lambda service. If this were a production quality service the integration tests would be a necessity.
+
+If I could start this project over again, I would have prioritized integration testing sooner. I would use the popular supertest module for this.
+
 ### Roadmap
 
 - Add ability map Yelp data to a business before returning results. 
 - Include a deeplink to Yelp for more information. 
-- Include a deeplink to maps.
-- Include a deeplink to call an uber to your current location. 
 
 ### Notes on Data Filtering:
 
- - This service will only return food trucks that have currently approved permits.
+ - This service will only return food trucks located in San Francisco that have currently approved permits.
  

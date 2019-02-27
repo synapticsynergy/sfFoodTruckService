@@ -9,7 +9,10 @@ Lambda function to get food truck data from a San Francisco database.
     1. [Installing Dependencies](#installing-dependencies)
     1. [Serving in Development](#serving-in-development)
     1. [Testing](#testing)
+    1. [Style Guide](#style-guide)
+1. [Given More Time](#given-more-time)
 1. [Roadmap](#roadmap)
+1. [Notes On Data Filtering](#notes-on-data-filtering)
 
 ## Usage
 
